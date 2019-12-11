@@ -19,9 +19,20 @@ const ShoppingListService = {
       .select("*")
       .where("id", id)
       .first();
+  },
+
+  updateItem(knex, id, newItemField) {
+    return knex("shopping_list")
+      .where({ id })
+      .update(newItemField);
+  },
+
+  deleteItem(knex, id) {
+    return knex("shopping_list")
+      .where({ id })
+      .delete();
   }
 
-  // updateItem(knex, id, updateField)
 };
 
 module.exports = ShoppingListService;

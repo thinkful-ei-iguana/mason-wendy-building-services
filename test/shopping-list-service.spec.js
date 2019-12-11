@@ -5,7 +5,7 @@ const knex = require("knex");
 
 const ShoppingListService = require("../src/shopping-list-service");
 
-describe("Shopping List Items service object", function() {
+describe("Shopping List Items service object", function () {
   let db;
   let testItems = [
     {
@@ -58,24 +58,7 @@ describe("Shopping List Items service object", function() {
       });
     });
 
-    it("insertItem() inserts new item into shopping_list with id", () => {
-      const newItem = {
-        name: "soap",
-        price: "10.00",
-        date_added: new Date("2019-12-11 12:00:00"),
-        category: "Snack"
-      };
-      return ShoppingListService.insertItem(db, newItem).then(actual => {
-        expect(actual).to.eql({
-          id: 1,
-          checked: false,
-          name: newItem.name,
-          price: newItem.price,
-          date_added: new Date(newItem.date_added),
-          category: newItem.category
-        });
-      });
-    });
+
     it("getById() resolves an article by id from 'shopping_list'", () => {
       const secondId = 2;
       const secondTestItem = testItems[secondId - 1];
@@ -91,4 +74,24 @@ describe("Shopping List Items service object", function() {
       });
     });
   });
+
+  it("insertItem() inserts new item into shopping_list with id", () => {
+    const newItem = {
+      name: "soap",
+      price: "10.00",
+      date_added: new Date("2019-12-11 12:00:00"),
+      category: "Snack"
+    };
+    return ShoppingListService.insertItem(db, newItem).then(actual => {
+      expect(actual).to.eql({
+        id: 1,
+        checked: false,
+        name: newItem.name,
+        price: newItem.price,
+        date_added: new Date(newItem.date_added),
+        category: newItem.category
+      });
+    });
+  });
+
 });
