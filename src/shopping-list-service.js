@@ -13,8 +13,15 @@ const ShoppingListService = {
       });
   },
 
+  getById(knex, id) {
+    return knex
+      .from("shopping_list")
+      .select("*")
+      .where("id", id)
+      .first();
+  }
 
-
+  // updateItem(knex, id, updateField)
 };
 
 module.exports = ShoppingListService;

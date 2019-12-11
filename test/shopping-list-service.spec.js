@@ -5,7 +5,7 @@ const knex = require("knex");
 
 const ShoppingListService = require("../src/shopping-list-service");
 
-describe("Shopping List Items service object", function () {
+describe("Shopping List Items service object", function() {
   let db;
   let testItems = [
     {
@@ -48,40 +48,47 @@ describe("Shopping List Items service object", function () {
   });
 
   context("Given shopping list has data", () => {
-    before(() => {
-      return db.insert(testItems)
-        .into("shopping_list");
+    beforeEach(() => {
+      return db.insert(testItems).into("shopping_list");
     });
 
     it("GetAllItem() resolves all items from shopping_list table", () => {
       return ShoppingListService.getAllItems(db).then(actual => {
         expect(actual).to.eql(testItems);
-
       });
     });
 
-    it("insertItem() inserts new item into shopping_list", () => {
+    it("insertItem() inserts new item into shopping_list with id", () => {
       const newItem = {
-
         name: "soap",
         price: "10.00",
         date_added: new Date("2019-12-11 12:00:00"),
-        category: "Snack",
-
+        category: "Snack"
       };
-      return ShoppingListService.insertItem(db, newItem)
-        .then(actual => {
-          expect(actual).to.eql({
-            id: 1,
-            checked: false,
-            name: newItem.name,
-            price: newItem.price,
-            date_added: new Date(newItem.date_added),
-            category: newItem.category
-          });
+      return ShoppingListService.insertItem(db, newItem).then(actual => {
+        expect(actual).to.eql({
+          id: 1,
+          checked: false,
+          name: newItem.name,
+          price: newItem.price,
+          date_added: new Date(newItem.date_added),
+          category: newItem.category
         });
+      });
     });
-
+    it("getById() resolves an article by id from 'shopping_list'", () => {
+      const secondId = 2;
+      const secondTestItem = testItems[secondId - 1];
+      return ShoppingListService.getById(db, secondId).then(actual => {
+        expect(actual).to.eql({
+          id: secondId,
+          name: secondTestItem.name,
+          price: secondTestItem.price,
+          date_added: secondTestItem.date_added,
+          category: secondTestItem.category,
+          checked: secondTestItem.checked
+        });
+      });
+    });
   });
-
 });
