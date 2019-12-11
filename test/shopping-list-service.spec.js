@@ -5,7 +5,7 @@ const knex = require("knex");
 
 const ShoppingListService = require("../src/shopping-list-service");
 
-describe("Shopping List Items service object", function () {
+describe("Shopping List Items service object", function() {
   let db;
   let testItems = [
     {
@@ -58,7 +58,6 @@ describe("Shopping List Items service object", function () {
       });
     });
 
-
     it("getById() resolves an article by id from 'shopping_list'", () => {
       const secondId = 2;
       const secondTestItem = testItems[secondId - 1];
@@ -72,6 +71,35 @@ describe("Shopping List Items service object", function () {
           checked: secondTestItem.checked
         });
       });
+    });
+
+    it("updateItem() updates an item in the shopping list table", () => {
+      const idOfItemToUpdate = 2;
+      const updatedItem = {
+        name: "toothpaste",
+        category: "Breakfast",
+        checked: true,
+        date_added: new Date("2019-12-11 12:00:00"),
+        price: "5.00"
+      };
+      return ShoppingListService.updateItem(db, idOfItemToUpdate, updatedItem)
+        .then(() => ShoppingListService.getById(db, idOfItemToUpdate))
+        .then(item => {
+          expect(item).to.eql({
+            id: idOfItemToUpdate,
+            ...updatedItem
+          });
+        });
+    });
+
+    it("deleteItem() removes an item from the shopping list table", () => {
+      const idToDelete = 2;
+      return ShoppingListService.deleteItem(db, idToDelete)
+        .then(() => ShoppingListService.getAllItems(db))
+        .then(allItems => {
+          const expected = testItems.filter(item => item.id !== idToDelete);
+          expect(allItems).to.eql(expected);
+        });
     });
   });
 
@@ -93,5 +121,4 @@ describe("Shopping List Items service object", function () {
       });
     });
   });
-
 });
